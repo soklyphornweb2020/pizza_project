@@ -2,12 +2,12 @@
 
 class Users extends BaseController
 {
-	public function index()
+	public function showLogin()
 	{
 		return view('auths/login');
     }
     
-    public function register()
+    public function showRegister()
 	{
 		return view('auths/register');
 	}
