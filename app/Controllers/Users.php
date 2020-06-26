@@ -12,4 +12,9 @@ class Users extends BaseController
 		return view('auths/register');
 	}
 
+	public function showList()
+	{
+		return view('index');
+	}
+
 }
