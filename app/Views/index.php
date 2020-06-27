@@ -1,4 +1,3 @@
-
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 <?= $this->include('layouts/navbar') ?>
@@ -76,7 +75,7 @@
         
         <!-- Modal body -->
         <div class="modal-body text-right">
-			<form  action="/" method="post">
+			<form  action="/list" method="post">
 				<div class="form-group">
 					<input type="text" class="form-control" placeholder="Pizza name">
 				</div>
