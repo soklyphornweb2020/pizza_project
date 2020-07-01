@@ -2,11 +2,11 @@
 
 use CodeIgniter\Model;
 
-class StudentModel extends Model
+class UsersModel extends Model
 {
-    protected $table      = 'students';
+    protected $table      = 'users';
     protected $primaryKey = 'id';
 
     protected $returnType     = 'array';
-    protected $allowedFields = ['name', 'email', 'password', 'age', 'province'];
+    protected $allowedFields = ['email', 'password', 'address', 'role'];
 }

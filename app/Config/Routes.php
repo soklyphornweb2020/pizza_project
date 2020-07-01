@@ -30,11 +30,13 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->add('/', 'Users::showLogin');
-$routes->add('signup', 'Users::showRegister');
-$routes->add('list', 'Users::showList');
-$routes->add('signin', 'Users::showList');
-// $routes->match(['get','post'] ,'signin', 'Users::showRegister');
+
+	$routes->get('/', 'Users::index');
+	$routes->match(['get','post'] ,'register', 'Users::register');
+	$routes->get('logout', 'Users::formlogout');
+	$routes->get('dashboard', 'Dashboard::addPizza');
+	$routes->get('remove/(:num)', 'Dashboard::showDeletePizza/$1');
+	$routes->get('edit/(:num)', 'Dashboard::showEditPizza/$1');
 
 /**
  * --------------------------------------------------------------------
