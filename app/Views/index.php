@@ -1,17 +1,20 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 <?= $this->include('layouts/navbar') ?>
-    <div class="container mt-5">
+
+<div class="container mt-5">
 		<div class="row">
 			<div class="col-2"></div>
-			<h1><?= session()->get('email')?></h1>
 			<div class="col-8">
+			<h5 class="text-center"></h5>
 				<div class="text-right">
-				<?php if(session()->get('role') == "manager"):?>
+
+				<?php if(session()->get('role') == 1) :?>
 					<a href="" class="btn btn-warning btn-sm text-white font-weight-bolder" data-toggle="modal" data-target="#createPizza">
 						<i class="material-icons float-left" data-toggle="tooltip" title="Add Pizza!" data-placement="left">add</i>&nbsp;Add
 					</a>
-					<?php endif; ?>
+				<?php endif; ?>
+
 				</div>
 				<hr>
 				<table class="table table-borderless table-hover">
@@ -20,31 +23,31 @@
 						<th>Name</th>
 						<th>Ingredients</th>
 						<th>Price</th>
-						<?php if(session()->get('role') == "manager") :?>
-							<th>Status</th>
-						<?php endif; ?>
+
+					<?php if(session()->get('role') == 1) :?>
+						<th>Status</th>
+					<?php endif; ?>
 
 					</tr>
+					<!-- get data from tabe pizza -->
+					
+					<?php foreach($listPizza as $values) :?>
+					<tr>
+					<td class="hide"><?= $values['id']; ?></td>
+						<td class="pizzaName"><?= $values['name']; ?></td>
+						<td><?= $values['ingredients']; ?></td>
+						<td class="text-success font-weight-bolder"><?= $values['prize']; ?> $</td>
+						<td>
 
-					<?php foreach($pizzaDatas as $pizza) :?>
-						<tr>
+						<?php if(session()->get('role') == 1) :?>
+							<a href="pizza/editPizza/<?= $values['id']; ?>" data-toggle="modal" data-target="#updatePizza"><i class="material-icons text-info" data-toggle="tooltip" title="Edit Pizza!" data-placement="left">edit</i></a>
+							<a href="pizza/deletePizza/<?= $values['id']; ?>" data-toggle="tooltip" title="Delete Pizza!" data-placement="right"><i class="material-icons text-danger">delete</i></a>
+						<?php endif; ?>
 
-							<td class="hide"><?= $pizza['id']; ?></td>
-
-							<td class="pizzaName"><?= $pizza['name']; ?></td>
-
-							<td> <?= $pizza['ingredient']; ?></td>
-
-							<td class="text-success font-weight-bolder"><?= $pizza['price']; ?>$</td>
-
-							<td>
-							<?php if(session()->get('role') == "manager") :?>		
-								<a href="/edit/<?= $pizza['id']; ?>" data-toggle="modal" data-target="#updatePizza"><i class="material-icons text-info" data-toggle="tooltip" title="Edit Pizza!" data-placement="left">edit</i></a>
-								<a href="/delete/<?= $pizza['id']; ?>" data-toggle="tooltip" title="Delete Pizza!" data-placement="right"><i class="material-icons text-danger">delete</i></a>
-							<?php endif; ?>
-							</td>
-						</tr>
+						</td>
+					</tr>
 					<?php endforeach; ?>
+				
 				</table>
 			</div>
 			<div class="col-2"></div>
@@ -65,19 +68,17 @@
         </div>
         
         <!-- Modal body -->
+
         <div class="modal-body text-right">
-			<form  action="dashboard/addPizza" method="post">
-
+			<form  action="pizza/addPizza" method="post">
 				<div class="form-group">
-					<input type="text" class="form-control" placeholder="Pizza name" name="name">
+					<input type="text" name="name" class="form-control" placeholder="Pizza name">
 				</div>
-
 				<div class="form-group">
-					<textarea name="ingredient" placeholder="Ingredients" class="form-control"></textarea>
+					<input type="number" name="prize" class="form-control" placeholder="Prize in dollars">
 				</div>
-
 				<div class="form-group">
-					<input type="number" class="form-control" placeholder="Prize in dollars" name="price">
+					<textarea name="ingredients" placeholder="Ingredients" class="form-control"></textarea>
 				</div>
 
 			<a data-dismiss="modal" class="closeModal">DISCARD</a>
@@ -103,34 +104,30 @@
         </div>
         
         <!-- Modal body -->
-        <div class="modal-body text-right">
-			<form  action="/update" method="post">
+		<div class="modal-body text-right">
+		<form  action="" method="post">
 
-				<div class="form-group">
-					<input type="hidden" name="id" id="id" class="form-control">
-				</div>
-
-				<div class="form-group">
-					<input type="text" name="name" id="name" class="form-control">
-				</div>
-				<div id="error"></div>
-
-				<div class="form-group">
-					<input type="text" name="price" id="price" class="form-control">
-				</div>
-
-				<div class="form-group">
-					<textarea name="ingredient" id="ingredient" class="form-control"></textarea>
-				</div>
-
+			<div class="form-group">
+				<input type="hidden" class="form-control"  name="id" id="id">
+			</div>
+			<div class="form-group">
+				<input type="text" name="name" id= "names" class="form-control" placeholder="Pizza name">
+			</div>
+			<div class="form-group">
+				<input type="text" name="price" id= "prices" class="form-control" placeholder="Prize in dollars">
+			</div>
+			<div class="form-group">
+				<textarea name="ingredient" id= "ingredients" placeholder="ingredients" class="form-control"></textarea>
+			</div>
 			<a data-dismiss="modal" class="closeModal">DISCARD</a>
-		 	 &nbsp;
-		  <input type="submit" value="UPDATE" class="createBtn text-warning">
-        </div>
-        </form>
+			&nbsp;
+			<input type="submit" value="UPDATE" class="createBtn text-warning">
+			</div>
+			</form>
       </div>
-    </div>
+    </div> 
   </div>
+ 
   <!-- =================================END MODEL UPDATE==================================================== -->
 
   <script>
@@ -138,19 +135,18 @@
 		
 		$('.editdata').on('click',function(){
 			$('#updatePizza');
-			$tr = $(this).closest('tr');
-			var data = $tr.children('td').map(function(){
+			$tr = $(this).closest("tr");
+			var data = $tr.children("td").map(function(){
 				return $(this).text();
 			}).get();
 
-			// console.log(data);
 			$('#id').val(data[0]);
-			$('#name').val(data[1]);
-			$('#ingredient').val(data[2]);
-			$('#price').val(data[3]);
-
+			$('#names').val(data[1]);
+			$('#prices').val(data[2]);
+			$('#ingredients').val(data[3]);
+	
 		});
 	});
-</script>
+</script> 
 
-<?= $this->endSection() ?>
+  <?= $this->endSection() ?>
